@@ -1,2 +1,5 @@
 # Flask.find_teacher
-small flask project
+
+you can find your own teacher with this service
+
+
