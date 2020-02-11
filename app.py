@@ -27,6 +27,7 @@ tea = json.dumps(tea, ensure_ascii=False)
 tea = json.loads(tea)
 
 
+# запись в json-файл
 def write_json(file, stroka):
     s = []
     try:
@@ -115,7 +116,7 @@ def bron_done():
         "teacher":
             {
                 'ID': teacherId,
-                "day": teacherDay,
+                "day": week[teacherDay],
                 "time": teacherTime
             },
         "client":
@@ -128,7 +129,7 @@ def bron_done():
     write_json('booking.json', stroka)
 
     return render_template("booking_done.html",
-                           teacherDay=teacherDay,
+                           teacherDay=week[teacherDay],
                            teacherTime=teacherTime,
                            clientName=clientName,
                            clientPhone=clientPhone)
@@ -146,6 +147,7 @@ def request_done():
     clientName = request.form.get('clientName')
     clientPhone = request.form.get('clientPhone')
 
+    goal = goals[goal]
     stroka = [{
         'goal': goal,
         'time': time,
@@ -155,7 +157,6 @@ def request_done():
 
     write_json('request.json', stroka)
 
-    goal = goals[goal]
     return render_template("request_done.html",
                            goal=goal,
                            time=time,
