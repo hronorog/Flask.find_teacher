@@ -4,6 +4,7 @@ from data import *
 import json
 from random import shuffle
 
+
 # дни недели
 week = {'mon': 'Понедельник',
         'tue': 'Вторник',
@@ -24,6 +25,22 @@ goal_icon = {"travel": "⛱",
 tea = teachers
 tea = json.dumps(tea, ensure_ascii=False)
 tea = json.loads(tea)
+
+
+def write_json(file, stroka):
+    s = []
+    try:
+        with open(file, 'r', encoding='utf-8') as f:
+            s = json.loads(f.read())
+    except:
+        f = open(file, 'w', encoding='utf-8')
+        f.close()
+    finally:
+        s = list(s)
+        s.extend(stroka)
+        with open(file, 'w', encoding='utf-8') as f:
+            f.write(json.dumps(s, sort_keys=True, indent=2, ensure_ascii=False))
+
 
 app = Flask(__name__)
 
@@ -94,19 +111,22 @@ def bron_done():
     clientPhone = request.form.get('clientPhone')
 
     # подготовка json-строки
-    stroka = {"teacher":
-                  {'ID': teacherId,
-                   "day": teacherDay,
-                   "time": teacherTime
-                   },
-              "client":
-                  {"name": clientName,
-                   "phone": clientPhone
-                   }
-              }
+    stroka = [{
+        "teacher":
+            {
+                'ID': teacherId,
+                "day": teacherDay,
+                "time": teacherTime
+            },
+        "client":
+            {
+                "name": clientName,
+                "phone": clientPhone
+            }
+    }]
 
-    with open('booking.json', "w", encoding="utf-8") as f:
-        f.write(json.dumps(stroka, sort_keys=True, indent=2, ensure_ascii=False))
+    write_json('booking.json', stroka)
+
     return render_template("booking_done.html",
                            teacherDay=teacherDay,
                            teacherTime=teacherTime,
@@ -126,14 +146,14 @@ def request_done():
     clientName = request.form.get('clientName')
     clientPhone = request.form.get('clientPhone')
 
-    stroka = {
+    stroka = [{
         'goal': goal,
         'time': time,
         'clientName': clientName,
         'clientPhone': clientPhone
-    }
-    with open('request.json', "w", encoding="utf-8") as f:
-        f.write(json.dumps(stroka, sort_keys=True, indent=2, ensure_ascii=False))
+    }]
+
+    write_json('request.json', stroka)
 
     goal = goals[goal]
     return render_template("request_done.html",
