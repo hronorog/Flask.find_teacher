@@ -8,6 +8,7 @@
     <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Найдите идеального <br>репетитора английского, <br>занимайтесь онлайн</strong></h1>
     <div class="text-center mb-5">
       <div class="btn-group mx-auto mb-0" role="group" aria-label="Basic example">
+
       {% for goal_k, goal_v in goals.items() %}
         {% for icon_k, icon_v in goal_icon.items() %}
           {% if goal_k == icon_k %}
@@ -15,6 +16,7 @@
           {% endif %}
         {% endfor %}
       {% endfor %}
+
       </div>
     </div>
     <h2 class="h5 text-center mb-5">Свободны прямо сейчас</h2>
@@ -22,6 +24,7 @@
       <div class="col-12 col-lg-10 offset-lg-1 m-auto">
 
         {% for teacher in teachers %}
+
         <div class="card mb-4">
           <div class="card-body">
             <div class="row">
@@ -35,6 +38,7 @@
             </div>
           </div>
         </div>
+
         {% endfor %}
 
       </div>
@@ -45,8 +49,6 @@
     <div class="text-center pb-5">
         <a href="/request/" class="btn btn-primary">Заказать подбор</a>
     </div>
-
-
-
   </main>
+
 {% endblock %}

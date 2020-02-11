@@ -28,7 +28,7 @@
 
               {% for time, bool in hours.items() %}
                 {% if bool == True %}
-              <a href="#" class="btn btn-outline-success mr-2">{{ time }} свободно</a>
+              <a href="/booking/{{ teacher.id }}/{{ day }}/{{ time }}" class="btn btn-outline-success mr-2">{{ time }} свободно</a>
                 {% endif %}
               {% endfor %}
               {% endfor %}

@@ -1,9 +1,8 @@
 # -*- coding: utf8 -*-
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from data import *
 import json
 from random import shuffle
-
 
 # дни недели
 week = {'mon': 'Понедельник',
@@ -25,7 +24,6 @@ goal_icon = {"travel": "⛱",
 tea = teachers
 tea = json.dumps(tea, ensure_ascii=False)
 tea = json.loads(tea)
-
 
 app = Flask(__name__)
 
@@ -78,24 +76,71 @@ def to_goals(goal):
                            lst=lst)
 
 
+@app.route('/booking/<id_teacher>/<day_week>/<time>/')
+def bron(id_teacher, day_week, time):
+    return render_template("booking.html",
+                           day=day_week,
+                           teacher=tea[int(id_teacher)],
+                           time=time,
+                           week=week)
+
+
+@app.route('/booking_done/', methods=['POST'])
+def bron_done():
+    teacherId = request.form.get('clientTeacher')
+    teacherDay = request.form.get('clientWeekday')
+    teacherTime = request.form.get('clientTime')
+    clientName = request.form.get('clientName')
+    clientPhone = request.form.get('clientPhone')
+
+    # подготовка json-строки
+    stroka = {"teacher":
+                  {'ID': teacherId,
+                   "day": teacherDay,
+                   "time": teacherTime
+                   },
+              "client":
+                  {"name": clientName,
+                   "phone": clientPhone
+                   }
+              }
+
+    with open('booking.json', "w", encoding="utf-8") as f:
+        f.write(json.dumps(stroka, sort_keys=True, indent=2, ensure_ascii=False))
+    return render_template("booking_done.html",
+                           teacherDay=teacherDay,
+                           teacherTime=teacherTime,
+                           clientName=clientName,
+                           clientPhone=clientPhone)
+
+
 @app.route('/request/')
 def t_request():
     return render_template("request.html")
 
 
-@app.route('/request_done/')
+@app.route('/request_done/', methods=['POST'])
 def request_done():
-    return render_template("request_done.html")
+    goal = request.form.get('goal')
+    time = request.form.get('time')
+    clientName = request.form.get('clientName')
+    clientPhone = request.form.get('clientPhone')
 
+    stroka = {
+        'goal': goal,
+        'time': time,
+        'clientName': clientName,
+        'clientPhone': clientPhone
+    }
+    with open('request.json', "w", encoding="utf-8") as f:
+        f.write(json.dumps(stroka, sort_keys=True, indent=2, ensure_ascii=False))
 
-@app.route('/booking/<id_teacher>/<time_week>/<time>/')
-def bron(id_teacher, time_week, time):
-    return render_template("booking.html")
-
-
-@app.route('/booking_done/')
-def bron_done():
-    return render_template("booking_done.html")
+    goal = goals[goal]
+    return render_template("request_done.html",
+                           goal=goal,
+                           time=time,
+                           clientName=clientName,
+                           clientPhone=clientPhone)
 
 
 @app.errorhandler(404)
