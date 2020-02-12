@@ -96,9 +96,12 @@ def to_goals(goal):
 
 @app.route('/booking/<id_teacher>/<day_week>/<time>/')
 def bron(id_teacher, day_week, time):
+    for teacher in tea:
+        if teacher['id'] == int(id_teacher):
+            id_t = teacher
     return render_template("booking.html",
                            day=day_week,
-                           teacher=tea[int(id_teacher)],
+                           teacher=id_t,
                            time=time,
                            week=week)
 
